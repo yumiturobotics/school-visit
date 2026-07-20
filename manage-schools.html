@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage Schools - School Visit Management System">
+  <title>Manage Schools | School Visit Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+  <div id="spinnerOverlay" class="spinner-overlay">
+    <div class="spinner-box"><div class="spinner-border"></div><p>Please wait...</p></div>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <div id="sidebar-overlay"></div>
+
+  <div class="app-wrapper">
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-text"><div>School Visit</div><div class="brand-sub">Management System</div></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+        <div class="nav-section-label">Administration</div>
+        <a href="manage-schools.html" class="nav-link active"><i class="bi bi-building"></i>Manage Schools</a>
+        <a href="manage-users.html" class="nav-link"><i class="bi bi-people"></i>Manage Users</a>
+        <a href="reports.html" class="nav-link"><i class="bi bi-bar-chart-line"></i>Reports</a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html" class="nav-link"><i class="bi bi-person-circle"></i>Profile</a>
+        <button class="nav-link logout-btn text-danger"><i class="bi bi-box-arrow-left"></i>Logout</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar sidebar-avatar">A</div>
+          <div class="user-info">
+            <div class="user-name sidebar-username">Admin</div>
+            <div class="user-role sidebar-role">Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <button class="topbar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+        <div class="topbar-title">Manage Schools</div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="themeToggle"><i class="bi bi-moon-fill"></i></button>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="page-header">
+          <div>
+            <h5>Schools</h5>
+            <p class="text-muted" id="schoolCount">Loading...</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="addSchoolBtn"><i class="bi bi-plus-circle me-1"></i>Add School</button>
+        </div>
+
+        <div class="filter-bar mb-3">
+          <div class="row g-2">
+            <div class="col-12 col-md-5">
+              <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" class="form-control" id="searchSchool" placeholder="Search schools...">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>School Name</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="schoolsTableBody">
+                <tr><td colspan="4" class="text-center py-5"><div class="empty-state"><i class="bi bi-hourglass"></i><p>Loading...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bnav-items">
+      <a href="dashboard.html" class="bnav-item"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="manage-schools.html" class="bnav-item active"><i class="bi bi-building"></i>Schools</a>
+      <a href="manage-users.html" class="bnav-item"><i class="bi bi-people"></i>Users</a>
+      <a href="reports.html" class="bnav-item"><i class="bi bi-bar-chart-line"></i>Reports</a>
+      <a href="profile.html" class="bnav-item"><i class="bi bi-person-circle"></i>Profile</a>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="schoolModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="schoolModalTitle">Add School</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="schoolForm" novalidate>
+            <input type="hidden" id="schoolID">
+            <div class="mb-3">
+              <label class="form-label" for="schoolName">School Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="schoolName" placeholder="Enter school name" required>
+            </div>
+            <div class="mb-3" id="statusGroup">
+              <label class="form-label" for="schoolStatus">Status</label>
+              <select class="form-select" id="schoolStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="saveSchoolBtn">Save School</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body p-4 text-center">
+          <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size:2rem;"></i>
+          <p class="mt-2 mb-0 fs-sm" id="confirmMessage">Are you sure?</p>
+        </div>
+        <div class="modal-footer justify-content-center border-0 pt-0">
+          <button class="btn btn-sm btn-outline-secondary" id="confirmNoBtn">Cancel</button>
+          <button class="btn btn-sm btn-danger" id="confirmYesBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/schools.js"></script>
+</body>
+</html>
