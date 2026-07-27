@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="My Visits - School Visit Management System">
+  <title>My Visits | School Visit Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+  <div id="spinnerOverlay" class="spinner-overlay">
+    <div class="spinner-box"><div class="spinner-border"></div><p>Please wait...</p></div>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <div id="sidebar-overlay"></div>
+
+  <div class="app-wrapper">
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-text"><div>School Visit</div><div class="brand-sub">Management System</div></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+        <div class="nav-section-label">Visits</div>
+        <a href="new-visit.html" class="nav-link"><i class="bi bi-plus-circle"></i>New Visit</a>
+        <a href="my-visits.html" class="nav-link active"><i class="bi bi-journal-check"></i>My Visits</a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html" class="nav-link"><i class="bi bi-person-circle"></i>Profile</a>
+        <button class="nav-link logout-btn text-danger"><i class="bi bi-box-arrow-left"></i>Logout</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar sidebar-avatar">U</div>
+          <div class="user-info">
+            <div class="user-name sidebar-username">User</div>
+            <div class="user-role sidebar-role">Role</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <button class="topbar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+        <div class="topbar-title">My Visits</div>
+        <div class="topbar-actions">
+          <a href="new-visit.html" class="btn btn-primary btn-sm"><i class="bi bi-plus me-1"></i>New</a>
+          <button class="icon-btn" id="themeToggle"><i class="bi bi-moon-fill"></i></button>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="page-header">
+          <div>
+            <h5>Visit Records</h5>
+            <p class="text-muted" id="visitsCount">Loading...</p>
+          </div>
+          <a href="new-visit.html" class="btn btn-primary btn-sm d-none d-md-block"><i class="bi bi-plus-circle me-1"></i>New Visit</a>
+        </div>
+
+        <div class="filter-bar mb-3">
+          <div class="row g-2">
+            <div class="col-12 col-md-4">
+              <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search school, topics, incharge...">
+              </div>
+            </div>
+            <div class="col-6 col-md-2">
+              <input type="date" class="form-control" id="filterDateFrom" placeholder="From Date">
+            </div>
+            <div class="col-6 col-md-2">
+              <input type="date" class="form-control" id="filterDateTo" placeholder="To Date">
+            </div>
+            <div class="col-6 col-md-2">
+              <select class="form-select" id="filterSchool">
+                <option value="">All Schools</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-2">
+              <button class="btn btn-outline-secondary w-100" id="clearFiltersBtn"><i class="bi bi-x-circle me-1"></i>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>School</th>
+                  <th class="admin-only">Incharge</th>
+                  <th>Students</th>
+                  <th>Topics</th>
+                  <th>Photos</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="visitsTableBody">
+                <tr><td colspan="8" class="text-center py-5"><div class="empty-state"><i class="bi bi-hourglass"></i><p>Loading visits...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p-3 d-flex justify-content-end" id="pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bnav-items">
+      <a href="dashboard.html" class="bnav-item"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="new-visit.html" class="bnav-item"><i class="bi bi-plus-circle"></i>New Visit</a>
+      <a href="my-visits.html" class="bnav-item active"><i class="bi bi-journal-check"></i>My Visits</a>
+      <a href="profile.html" class="bnav-item"><i class="bi bi-person-circle"></i>Profile</a>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="viewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"><i class="bi bi-journal-text me-2"></i>Visit Details</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-muted fs-xs">School</label>
+              <div class="fw-700" id="viewSchool">-</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted fs-xs">Visit Date</label>
+              <div class="fw-700" id="viewDate">-</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted fs-xs">Students</label>
+              <div class="fw-700" id="viewStudents">-</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted fs-xs">Recorded By</label>
+              <div class="fw-700" id="viewUser">-</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted fs-xs">Topics Covered</label>
+              <div id="viewTopics" style="white-space:pre-wrap;">-</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted fs-xs">Remarks</label>
+              <div id="viewRemarks">-</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted fs-xs">Photos</label>
+              <div id="viewPhotos">No photos</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted fs-xs">Timestamp</label>
+              <div class="fs-xs text-muted" id="viewTimestamp">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body p-4 text-center">
+          <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size:2rem;"></i>
+          <p class="mt-2 mb-0 fs-sm" id="confirmMessage">Are you sure?</p>
+        </div>
+        <div class="modal-footer justify-content-center border-0 pt-0">
+          <button class="btn btn-sm btn-outline-secondary" id="confirmNoBtn">Cancel</button>
+          <button class="btn btn-sm btn-danger" id="confirmYesBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/visits-list.js"></script>
+</body>
+</html>
